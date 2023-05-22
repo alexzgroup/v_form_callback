@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Test CallBack Form</title>
+    <link href="assets/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar bg-body-tertiary">
+    <div class="container">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Open callBack form
+        </button>
+        <code></code>
+    </div>
+</nav>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h5 class="modal-title">CallBack Form</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" name="name" class="form-control" id="name" required />
+                        <div></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="text" name="phone" class="form-control" id="phone" required />
+                        <div></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message</label>
+                        <input type="text" name="message" class="form-control" id="message" required />
+                        <div></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Send form</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+        integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="assets/jQuery-Mask-Plugin-master/dist/jquery.mask.min.js"></script>
+<script src="assets/dist/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+        integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+        integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
+        crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+       $('form [name="phone"]').mask(' +7 (999) 999-99-99');
+       let $_form = $('form');
+       $_form.validate({
+           errorClass: "text-danger border-danger",
+           validClass: "border-success",
+            submitHandler: function(form) {
+                let formData = $(form).serializeArray(),
+                    obj = {};
+
+                for (const formDatum of formData) {
+                    obj[formDatum.name] = formDatum.value;
+                }
+
+                // создаем файл
+                const data = new Blob(
+                    [JSON.stringify(obj)], {
+                        type: 'application/json'
+                    }
+                )
+
+                $(".navbar .container a, .navbar .container .alert").remove();
+                $("code").empty().html(JSON.stringify(obj));
+
+                // по старой схеме
+                const link = document.createElement('a')
+                link.setAttribute('href', URL.createObjectURL(data))
+                link.setAttribute('download', 'data.json')
+                link.className = 'btn btn-success'
+                link.textContent = 'Download data'
+                $(".navbar .container").append(link).append("" +
+                    "<div class=\"alert w-100 mt-5 alert-success\" role=\"alert\">\n" +
+                    "  Json Success generated <a target='_blank' href=\"" + URL.createObjectURL(data) + "\" class=\"alert-link\">Open content new tab</a>.\n" +
+                    "</div>")
+
+                URL.revokeObjectURL(data);
+            }
+        });
+    });
+</script>
+</html>
